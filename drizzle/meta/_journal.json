@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1764879079792,
+      "tag": "0000_early_warpath",
+      "breakpoints": true
+    }
+  ]
+}
