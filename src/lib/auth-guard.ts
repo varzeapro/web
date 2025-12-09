@@ -26,9 +26,9 @@ export async function requireAuth(
       if (!currentRole || !allowedRoles.includes(currentRole)) {
         // Redirect to appropriate dashboard
         if (currentRole === "PLAYER") {
-          redirect("/player/dashboard");
+          redirect("/player");
         } else if (currentRole === "TEAM") {
-          redirect("/team/dashboard");
+          redirect("/team");
         }
       }
     } else {
@@ -36,9 +36,9 @@ export async function requireAuth(
       // Onboarded users should NOT access onboarding pages
       // Redirect them to their dashboard
       if (currentRole === "PLAYER") {
-        redirect("/player/dashboard");
+        redirect("/player");
       } else if (currentRole === "TEAM") {
-        redirect("/team/dashboard");
+        redirect("/team");
       }
       // If no role but onboarded (edge case), allow access
     }

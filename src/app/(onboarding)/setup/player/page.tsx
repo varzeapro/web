@@ -44,7 +44,7 @@ export default function PlayerSetupPage() {
 
   useEffect(() => {
     if (session?.user?.onboardingCompleted) {
-      router.push("/player/dashboard");
+      router.push("/player");
     }
   }, [session, router]);
 
@@ -63,7 +63,7 @@ export default function PlayerSetupPage() {
     setLoading(true);
     try {
       await updatePlayerProfile(data);
-      router.push("/player/dashboard");
+      router.push("/player");
     } catch (error) {
       console.error(error);
     } finally {

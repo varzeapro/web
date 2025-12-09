@@ -20,9 +20,9 @@ export default async function AuthLayout({
     if (isOnboardingCompleted) {
       // Usuário já completou onboarding, mandar pro dashboard
       if (currentRole === "PLAYER") {
-        redirect("/player/dashboard");
+        redirect("/player");
       } else if (currentRole === "TEAM") {
-        redirect("/team/dashboard");
+        redirect("/team");
       }
     }
     // Usuário logado mas não completou onboarding, mandar pro welcome

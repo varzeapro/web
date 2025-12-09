@@ -45,7 +45,7 @@ export default function PlayerSkillPage() {
 
       toast.success("Perfil criado com sucesso! 🎉");
       reset();
-      router.push("/player/dashboard");
+      router.push("/player");
     } catch (error) {
       console.error("Erro ao criar perfil:", error);
       toast.error("Erro ao criar perfil. Tente novamente.");

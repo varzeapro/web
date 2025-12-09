@@ -14,9 +14,9 @@ export default function WelcomePage() {
     if (session?.user?.onboardingCompleted) {
       const role = session.user.role;
       if (role === "PLAYER") {
-        router.push("/player/dashboard");
+        router.push("/player");
       } else if (role === "TEAM") {
-        router.push("/team/dashboard");
+        router.push("/team");
       }
     }
   }, [session, router]);

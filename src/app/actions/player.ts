@@ -84,6 +84,6 @@ export async function updatePlayerProfile(data: PlayerProfileData) {
       .where(eq(users.id, session.user.id));
   });
 
-  revalidatePath("/player/dashboard");
+  revalidatePath("/player");
   return { success: true };
 }
