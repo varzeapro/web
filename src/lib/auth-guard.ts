@@ -16,47 +16,44 @@ export async function requireAuth(
     redirect("/sign-in");
   }
 
-  const isOnboardingCompleted = session.user.onboardingCompleted;
+  const isOnboardingCompleted = session.user.onboardingCompleted === true;
   const currentRole = session.user.role as UserRole | null;
 
-  // Logic to prevent re-onboarding if already completed
+  // If user has completed onboarding
   if (isOnboardingCompleted) {
-    if (allowedRoles && currentRole && !allowedRoles.includes(currentRole)) {
+    // If specific roles are required, check access
+    if (allowedRoles && allowedRoles.length > 0) {
+      if (!currentRole || !allowedRoles.includes(currentRole)) {
+        // Redirect to appropriate dashboard
+        if (currentRole === "PLAYER") {
+          redirect("/player/dashboard");
+        } else if (currentRole === "TEAM") {
+          redirect("/team/dashboard");
+        }
+      }
+    } else {
+      // No specific roles required (e.g., onboarding pages)
+      // Onboarded users should NOT access onboarding pages
+      // Redirect them to their dashboard
       if (currentRole === "PLAYER") {
         redirect("/player/dashboard");
       } else if (currentRole === "TEAM") {
         redirect("/team/dashboard");
       }
-    }
-
-    // If no specific roles are required (e.g. onboarding pages), but user is already onboarded,
-    // redirect them to their dashboard to prevent re-onboarding.
-    if (!allowedRoles || allowedRoles.length === 0) {
-      if (currentRole === "PLAYER") {
-        redirect("/player/dashboard");
-      } else if (currentRole === "TEAM") {
-        redirect("/team/dashboard");
-      }
+      // If no role but onboarded (edge case), allow access
     }
 
     return session;
   }
 
-  // If onboarding is NOT completed
-  // 3. If logged in AND onboarded -> redirect to dashboard (if on /welcome) OR allow access (if on dashboard)
-
-  // Since we can't easily check "current path" inside this server function without extra args,
-  // we will assume this is used on pages that REQUIRE specific roles.
-
-  // If the user hasn't completed onboarding, they shouldn't have a valid role (PLAYER/TEAM) effectively.
-  // But our schema change makes role nullable or we removed the default.
-
-  // If onboarding is NOT completed
-  if (checkOnboarding && !isOnboardingCompleted) {
+  // User has NOT completed onboarding
+  if (checkOnboarding) {
+    // If trying to access protected pages that require specific roles
     if (allowedRoles && allowedRoles.length > 0) {
+      // User hasn't onboarded yet, send them to onboarding
       redirect("/welcome");
     }
-    return session;
+    // If no specific roles required (onboarding pages), allow access
   }
 
   return session;

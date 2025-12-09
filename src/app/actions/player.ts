@@ -8,18 +8,19 @@ import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
+// Schema atualizado para o novo wizard
 const playerSchema = z.object({
-  nome: z.string().min(2),
-  dataNascimento: z.string().refine((date) => {
-    const age = new Date().getFullYear() - new Date(date).getFullYear();
-    return age >= 16;
-  }, "Você deve ter pelo menos 16 anos."),
-  cidade: z.string().min(2),
-  estado: z.string().length(2),
+  cidade: z.string().min(2, "Cidade obrigatória"),
+  estado: z.string().length(2, "Use a sigla do estado (ex: SP)"),
   posicoes: z.array(z.string()).min(1, "Selecione pelo menos uma posição."),
+  // Campos opcionais que podemos adicionar ao banco depois
+  radius: z.number().optional(),
+  skillLevel: z.number().min(1).max(5).optional(),
 });
 
-export async function updatePlayerProfile(data: z.infer<typeof playerSchema>) {
+export type PlayerProfileData = z.infer<typeof playerSchema>;
+
+export async function updatePlayerProfile(data: PlayerProfileData) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -41,10 +42,10 @@ export async function updatePlayerProfile(data: z.infer<typeof playerSchema>) {
       await tx
         .update(players)
         .set({
-          nome: validated.nome,
-          dataNascimento: new Date(validated.dataNascimento),
+          nome: session.user.name || "Jogador",
           cidade: validated.cidade,
           estado: validated.estado,
+          // TODO: Adicionar radius e skillLevel ao schema do banco
         })
         .where(eq(players.id, existingPlayer.id));
       playerId = existingPlayer.id;
@@ -53,8 +54,8 @@ export async function updatePlayerProfile(data: z.infer<typeof playerSchema>) {
         .insert(players)
         .values({
           userId: session.user.id,
-          nome: validated.nome,
-          dataNascimento: new Date(validated.dataNascimento),
+          nome: session.user.name || "Jogador",
+          dataNascimento: new Date("2000-01-01"), // Valor padrão temporário
           cidade: validated.cidade,
           estado: validated.estado,
         })
@@ -62,6 +63,7 @@ export async function updatePlayerProfile(data: z.infer<typeof playerSchema>) {
       playerId = result.id;
     }
 
+    // Limpar posições antigas e inserir novas
     await tx
       .delete(playerPositions)
       .where(eq(playerPositions.playerId, playerId));
@@ -75,6 +77,7 @@ export async function updatePlayerProfile(data: z.infer<typeof playerSchema>) {
       );
     }
 
+    // Marcar onboarding como completo
     await tx
       .update(users)
       .set({ onboardingCompleted: true })
