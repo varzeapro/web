@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Home, Users, DollarSign, Settings } from "lucide-react";
+import { Home, Users, Calendar, DollarSign, Settings } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 
-type TeamNavItem = "home" | "roster" | "finances" | "settings";
+type TeamNavItem = "home" | "matches" | "roster" | "finances" | "settings";
 
 interface TeamBottomNavbarProps {
   activeItem?: TeamNavItem;
@@ -17,6 +17,7 @@ const navItems: {
   href: string;
 }[] = [
   { id: "home", icon: Home, label: "Início", href: "/time" },
+  { id: "matches", icon: Calendar, label: "Partidas", href: "/time/partidas" },
   { id: "roster", icon: Users, label: "Elenco", href: "/time/elenco" },
   {
     id: "finances",
