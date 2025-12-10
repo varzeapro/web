@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  ArrowLeft,
-  UserPlus,
-  MoreVertical,
-  Crown,
-  Shield,
-  Trash2,
-} from "lucide-react";
+import { UserPlus, MoreVertical, Crown, Shield, Trash2 } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import {
   Avatar,
@@ -28,8 +21,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
-import { TeamBottomNavbar } from "@/src/components/team-dashboard";
-import Link from "next/link";
 
 // ============================================
 // MOCK DATA
@@ -163,121 +154,103 @@ export default function RosterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-onboarding pb-24">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0f0f1a]/90 backdrop-blur-lg px-4 py-4">
-        <div className="mx-auto max-w-md flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/time">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white/70 hover:text-white"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-xl font-bold text-white">Elenco</h1>
-              <p className="text-xs text-white/50">{roster.length} jogadores</p>
-            </div>
-          </div>
-          <Button
-            size="sm"
-            className="bg-(--varzea-green) hover:bg-(--varzea-green)/90"
-          >
-            <UserPlus className="h-4 w-4 mr-1" />
-            Convidar
-          </Button>
+    <>
+      {/* Page Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-white">👥 Elenco</h1>
+          <p className="text-xs text-white/50">{roster.length} jogadores</p>
         </div>
-      </header>
+        <Button
+          size="sm"
+          className="bg-(--varzea-green) hover:bg-(--varzea-green)/90"
+        >
+          <UserPlus className="h-4 w-4 mr-1" />
+          Convidar
+        </Button>
+      </div>
 
-      {/* Main Content */}
-      <main className="mx-auto max-w-md px-4 py-6">
-        <Card className="border-0 bg-linear-to-br from-[#1a1a2e] to-[#0f0f1a] text-white">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              👥 Jogadores
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {roster.map((player, index) => {
-              const roleInfo = roleConfig[player.role];
-              const RoleIcon = roleInfo.icon;
+      {/* Roster List */}
+      <Card className="border-0 bg-linear-to-br from-[#1a1a2e] to-[#0f0f1a] text-white">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center gap-2">
+            Jogadores
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {roster.map((player, index) => {
+            const roleInfo = roleConfig[player.role];
+            const RoleIcon = roleInfo.icon;
 
-              return (
-                <div
-                  key={player.id}
-                  className="flex items-center gap-3 rounded-lg bg-white/5 px-3 py-3 animate-fade-in"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  <Avatar className="h-10 w-10 border-2 border-white/20">
-                    <AvatarImage src={player.avatar} alt={player.name} />
-                    <AvatarFallback className="bg-white/10 text-sm font-medium">
-                      {player.initials}
-                    </AvatarFallback>
-                  </Avatar>
+            return (
+              <div
+                key={player.id}
+                className="flex items-center gap-3 rounded-lg bg-white/5 px-3 py-3 animate-fade-in"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                <Avatar className="h-10 w-10 border-2 border-white/20">
+                  <AvatarImage src={player.avatar} alt={player.name} />
+                  <AvatarFallback className="bg-white/10 text-sm font-medium">
+                    {player.initials}
+                  </AvatarFallback>
+                </Avatar>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium truncate">{player.name}</p>
-                      {RoleIcon && (
-                        <RoleIcon className={`h-4 w-4 ${roleInfo.color}`} />
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <Badge className="text-[10px] bg-white/10 text-white/60 border-0">
-                        {player.position}
-                      </Badge>
-                      <span className="text-xs text-white/40">
-                        {player.gamesPlayed} jogos
-                      </span>
-                    </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium truncate">{player.name}</p>
+                    {RoleIcon && (
+                      <RoleIcon className={`h-4 w-4 ${roleInfo.color}`} />
+                    )}
                   </div>
-
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        className="text-white/40 hover:text-white"
-                      >
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      className="bg-[#1a1a2e] border-white/10 text-white"
-                    >
-                      {player.role !== "captain" && (
-                        <DropdownMenuItem
-                          onClick={() => handlePromotePlayer(player.id, "vice")}
-                          className="hover:bg-white/10"
-                        >
-                          <Shield className="h-4 w-4 mr-2 text-(--varzea-blue-light)" />
-                          Promover a Vice
-                        </DropdownMenuItem>
-                      )}
-                      {player.role !== "captain" && (
-                        <DropdownMenuItem
-                          onClick={() => handleRemovePlayer(player.id)}
-                          className="hover:bg-red-500/10 text-red-400"
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Remover do time
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <Badge className="text-[10px] bg-white/10 text-white/60 border-0">
+                      {player.position}
+                    </Badge>
+                    <span className="text-xs text-white/40">
+                      {player.gamesPlayed} jogos
+                    </span>
+                  </div>
                 </div>
-              );
-            })}
-          </CardContent>
-        </Card>
-      </main>
 
-      {/* Bottom Navigation */}
-      <TeamBottomNavbar activeItem="roster" />
-    </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      className="text-white/40 hover:text-white"
+                    >
+                      <MoreVertical className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="bg-[#1a1a2e] border-white/10 text-white"
+                  >
+                    {player.role !== "captain" && (
+                      <DropdownMenuItem
+                        onClick={() => handlePromotePlayer(player.id, "vice")}
+                        className="hover:bg-white/10"
+                      >
+                        <Shield className="h-4 w-4 mr-2 text-(--varzea-blue-light)" />
+                        Promover a Vice
+                      </DropdownMenuItem>
+                    )}
+                    {player.role !== "captain" && (
+                      <DropdownMenuItem
+                        onClick={() => handleRemovePlayer(player.id)}
+                        className="hover:bg-red-500/10 text-red-400"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Remover do time
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            );
+          })}
+        </CardContent>
+      </Card>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { UserPlus, Check, X, Clock } from "lucide-react";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -80,7 +81,12 @@ export function PendingRequestsCard({
               </Avatar>
 
               <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{request.name}</p>
+                <Link
+                  href={`/jogadores/${request.id}`}
+                  className="hover:underline decoration-white/50"
+                >
+                  <p className="font-medium truncate">{request.name}</p>
+                </Link>
                 <div className="flex items-center gap-2 mt-0.5">
                   <Badge
                     className={`text-[10px] border ${

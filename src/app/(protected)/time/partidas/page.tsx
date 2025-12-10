@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/src/components/ui/button";
 import {
   Card,
   CardContent,
@@ -17,13 +15,10 @@ import {
 } from "@/src/components/ui/tabs";
 import {
   TeamMatchCard,
-  type PlayerConfirmation,
   ConfirmationList,
   CreateMatchSheet,
   type CreateMatchData,
-  TeamBottomNavbar,
 } from "@/src/components/team-dashboard";
-import Link from "next/link";
 
 // ============================================
 // MOCK DATA
@@ -181,129 +176,89 @@ export default function TeamMatchesPage() {
 
   const handleCreateMatch = (data: CreateMatchData) => {
     console.log("Creating match:", data);
-    // TODO: API call to create match
   };
 
   const handleRemindPlayer = (playerId: string) => {
     console.log("Reminding player:", playerId);
-    // TODO: Send reminder notification
   };
 
   const handleMatchClick = (matchId: string) => {
     setSelectedMatch(selectedMatch === matchId ? null : matchId);
   };
 
-  const getSelectedMatchConfirmations = () => {
-    const allMatches = [...mockUpcomingMatches, ...mockPastMatches];
-    return allMatches.find((m) => m.id === selectedMatch)?.confirmations || [];
-  };
-
   return (
-    <div className="min-h-screen bg-onboarding pb-24">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0f0f1a]/90 backdrop-blur-lg px-4 py-4">
-        <div className="mx-auto max-w-md flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/time">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white/70 hover:text-white"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-xl font-bold text-white">📅 Partidas</h1>
-              <p className="text-xs text-white/50">Gerencie os jogos do time</p>
-            </div>
-          </div>
-          <CreateMatchSheet onCreateMatch={handleCreateMatch} />
+    <>
+      {/* Page Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-white">📅 Partidas</h1>
+          <p className="text-xs text-white/50">Gerencie os jogos do time</p>
         </div>
-      </header>
+        <CreateMatchSheet onCreateMatch={handleCreateMatch} />
+      </div>
 
-      {/* Main Content */}
-      <main className="mx-auto max-w-md px-4 py-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-white/5 p-1 rounded-xl mb-6">
-            <TabsTrigger
-              value="upcoming"
-              className="rounded-lg data-[state=active]:bg-(--varzea-green) data-[state=active]:text-white text-white/60"
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-2 bg-white/5 p-1 rounded-xl mb-6">
+          <TabsTrigger
+            value="upcoming"
+            className="rounded-lg data-[state=active]:bg-(--varzea-green) data-[state=active]:text-white text-white/60"
+          >
+            Próximas ({mockUpcomingMatches.length})
+          </TabsTrigger>
+          <TabsTrigger
+            value="past"
+            className="rounded-lg data-[state=active]:bg-(--varzea-green) data-[state=active]:text-white text-white/60"
+          >
+            Histórico ({mockPastMatches.length})
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="upcoming" className="mt-0 space-y-4">
+          {mockUpcomingMatches.map((match, index) => (
+            <div
+              key={match.id}
+              className="animate-fade-in"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
-              Próximas ({mockUpcomingMatches.length})
-            </TabsTrigger>
-            <TabsTrigger
-              value="past"
-              className="rounded-lg data-[state=active]:bg-(--varzea-green) data-[state=active]:text-white text-white/60"
+              <TeamMatchCard {...match} onClick={handleMatchClick} />
+              {selectedMatch === match.id && (
+                <Card className="mt-2 border-0 bg-[#1a1a2e] text-white animate-fade-in">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      👥 Confirmações
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ConfirmationList
+                      players={match.confirmations}
+                      onRemind={handleRemindPlayer}
+                    />
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          ))}
+          {mockUpcomingMatches.length === 0 && (
+            <div className="rounded-xl border border-dashed border-white/20 bg-white/5 p-8 text-center">
+              <p className="text-4xl mb-3">📭</p>
+              <p className="text-white/70">Nenhuma partida marcada</p>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="past" className="mt-0 space-y-4">
+          {mockPastMatches.map((match, index) => (
+            <div
+              key={match.id}
+              className="animate-fade-in"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
-              Histórico ({mockPastMatches.length})
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Upcoming Matches */}
-          <TabsContent value="upcoming" className="mt-0 space-y-4">
-            {mockUpcomingMatches.map((match, index) => (
-              <div
-                key={match.id}
-                className="animate-fade-in"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <TeamMatchCard {...match} onClick={handleMatchClick} />
-
-                {/* Expandable confirmation list */}
-                {selectedMatch === match.id && (
-                  <Card className="mt-2 border-0 bg-[#1a1a2e] text-white animate-fade-in">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm flex items-center gap-2">
-                        👥 Confirmações
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ConfirmationList
-                        players={match.confirmations}
-                        onRemind={handleRemindPlayer}
-                      />
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-            ))}
-
-            {mockUpcomingMatches.length === 0 && (
-              <div className="rounded-xl border border-dashed border-white/20 bg-white/5 p-8 text-center">
-                <p className="text-4xl mb-3">📭</p>
-                <p className="text-white/70">Nenhuma partida marcada</p>
-                <p className="text-sm text-white/50 mt-1">
-                  Clique em "Nova Partida" para agendar
-                </p>
-              </div>
-            )}
-          </TabsContent>
-
-          {/* Past Matches */}
-          <TabsContent value="past" className="mt-0 space-y-4">
-            {mockPastMatches.map((match, index) => (
-              <div
-                key={match.id}
-                className="animate-fade-in"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <TeamMatchCard {...match} onClick={handleMatchClick} />
-              </div>
-            ))}
-
-            {mockPastMatches.length === 0 && (
-              <div className="rounded-xl border border-dashed border-white/20 bg-white/5 p-8 text-center">
-                <p className="text-4xl mb-3">🏟️</p>
-                <p className="text-white/70">Sem histórico de partidas</p>
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
-      </main>
-
-      {/* Bottom Navigation */}
-      <TeamBottomNavbar activeItem="matches" />
-    </div>
+              <TeamMatchCard {...match} onClick={handleMatchClick} />
+            </div>
+          ))}
+        </TabsContent>
+      </Tabs>
+    </>
   );
 }

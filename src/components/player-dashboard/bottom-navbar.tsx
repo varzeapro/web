@@ -1,14 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Home, Search, Calendar, User } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 
 type NavItem = "home" | "search" | "matches" | "profile";
-
-interface BottomNavbarProps {
-  activeItem?: NavItem;
-}
 
 const navItems: {
   id: NavItem;
@@ -22,7 +19,20 @@ const navItems: {
   { id: "profile", icon: User, label: "Perfil", href: "/player/profile" },
 ];
 
-export function BottomNavbar({ activeItem = "home" }: BottomNavbarProps) {
+export function BottomNavbar() {
+  const pathname = usePathname();
+
+  // Determina qual item está ativo baseado na rota atual
+  const getActiveItem = (): NavItem => {
+    if (pathname === "/player") return "home";
+    if (pathname.startsWith("/player/search")) return "search";
+    if (pathname.startsWith("/player/matches")) return "matches";
+    if (pathname.startsWith("/player/profile")) return "profile";
+    return "home";
+  };
+
+  const activeItem = getActiveItem();
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#0f0f1a]/95 backdrop-blur-lg">
       <div className="mx-auto flex max-w-md items-center justify-around px-2 py-2">

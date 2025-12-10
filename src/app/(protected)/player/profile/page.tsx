@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Settings, LogOut, Edit, ChevronRight } from "lucide-react";
-import { Button } from "@/src/components/ui/button";
+import { Settings, LogOut, Edit, ChevronRight } from "lucide-react";
 import { ProfileHeader } from "@/src/components/player-dashboard/profile-header";
 import { ProfileInfo } from "@/src/components/player-dashboard/profile-info";
-import { BottomNavbar } from "@/src/components/player-dashboard/bottom-navbar";
 import Link from "next/link";
 import { authClient } from "@/src/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -49,75 +47,56 @@ export default function ProfilePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-onboarding pb-24">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0f0f1a]/90 backdrop-blur-lg px-4 py-4">
-        <div className="mx-auto max-w-md flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/player">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white/70 hover:text-white"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <h1 className="text-xl font-bold text-white">Meu Perfil</h1>
-          </div>
-        </div>
-      </header>
+    <>
+      {/* Page Title */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-white">Meu Perfil</h1>
+      </div>
 
-      {/* Main Content */}
-      <main className="mx-auto max-w-md space-y-6 px-4 py-6">
-        {/* Profile Header */}
-        <section className="animate-fade-in">
-          <ProfileHeader
-            player={mockPlayer}
-            onEditAvatar={() => setEditingAvatar(true)}
-          />
-        </section>
+      {/* Profile Header */}
+      <section className="animate-fade-in mb-6">
+        <ProfileHeader
+          player={mockPlayer}
+          onEditAvatar={() => setEditingAvatar(true)}
+        />
+      </section>
 
-        {/* Profile Info */}
-        <section className="animate-fade-in animation-delay-200">
-          <ProfileInfo info={mockInfo} />
-        </section>
+      {/* Profile Info */}
+      <section className="animate-fade-in animation-delay-200 mb-6">
+        <ProfileInfo info={mockInfo} />
+      </section>
 
-        {/* Menu Items */}
-        <section className="animate-fade-in animation-delay-300 space-y-2">
-          {menuItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="flex items-center gap-3 rounded-xl bg-white/5 px-4 py-4 text-white transition-colors hover:bg-white/10"
-            >
-              <item.icon className="h-5 w-5 text-(--varzea-gold)" />
-              <span className="flex-1">{item.label}</span>
-              <ChevronRight className="h-5 w-5 text-white/30" />
-            </Link>
-          ))}
-
-          {/* Logout */}
-          <button
-            className="flex cursor-pointer w-full items-center gap-3 rounded-xl bg-red-500/10 px-4 py-4 text-red-400 transition-colors hover:bg-red-500/20"
-            onClick={() =>
-              authClient.signOut({
-                fetchOptions: {
-                  onSuccess: () => {
-                    router.push("/sign-in"); // redirect to login page
-                  },
-                },
-              })
-            }
+      {/* Menu Items */}
+      <section className="animate-fade-in animation-delay-300 space-y-2">
+        {menuItems.map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            className="flex items-center gap-3 rounded-xl bg-white/5 px-4 py-4 text-white transition-colors hover:bg-white/10"
           >
-            <LogOut className="h-5 w-5" />
-            <span className="flex-1 text-left">Sair da conta</span>
-          </button>
-        </section>
-      </main>
+            <item.icon className="h-5 w-5 text-(--varzea-gold)" />
+            <span className="flex-1">{item.label}</span>
+            <ChevronRight className="h-5 w-5 text-white/30" />
+          </Link>
+        ))}
 
-      {/* Bottom Navigation */}
-      <BottomNavbar activeItem="profile" />
-    </div>
+        {/* Logout */}
+        <button
+          className="flex cursor-pointer w-full items-center gap-3 rounded-xl bg-red-500/10 px-4 py-4 text-red-400 transition-colors hover:bg-red-500/20"
+          onClick={() =>
+            authClient.signOut({
+              fetchOptions: {
+                onSuccess: () => {
+                  router.push("/sign-in");
+                },
+              },
+            })
+          }
+        >
+          <LogOut className="h-5 w-5" />
+          <span className="flex-1 text-left">Sair da conta</span>
+        </button>
+      </section>
+    </>
   );
 }

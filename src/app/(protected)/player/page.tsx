@@ -6,7 +6,6 @@ import {
   TeamSwipeCard,
   SeasonStatsCard,
   EarningsCard,
-  BottomNavbar,
 } from "@/src/components/player-dashboard";
 
 // ============================================
@@ -38,7 +37,7 @@ const mockTeams = [
     distance: "2.5 km",
     playDays: ["Sáb", "Dom"],
     playTime: "14:00 - 17:00",
-    paymentPerGame: 50, // 💰 Team pays R$50 per game
+    paymentPerGame: 50,
   },
   {
     id: "2",
@@ -51,7 +50,7 @@ const mockTeams = [
     distance: "3.8 km",
     playDays: ["Qua", "Sex"],
     playTime: "19:00 - 21:00",
-    paymentPerGame: 80, // 💰 Team pays R$80 per game
+    paymentPerGame: 80,
   },
   {
     id: "3",
@@ -64,7 +63,7 @@ const mockTeams = [
     distance: "5.2 km",
     playDays: ["Sáb"],
     playTime: "08:00 - 12:00",
-    paymentPerGame: 30, // 💰 Team pays R$30 per game
+    paymentPerGame: 30,
   },
 ];
 
@@ -75,8 +74,8 @@ const mockStats = {
 };
 
 const mockEarnings = {
-  totalEarnings: 720, // R$ earned this season
-  pendingPayments: 100, // R$ still to receive
+  totalEarnings: 720,
+  pendingPayments: 100,
   gamesThisSeason: 12,
 };
 
@@ -105,71 +104,77 @@ export default function PlayerDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-onboarding pb-24">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0f0f1a]/90 backdrop-blur-lg px-4 py-4">
-        <div className="mx-auto max-w-md">
-          <h1 className="text-2xl font-bold text-white">
-            Olá, <span className="text-(--varzea-green)">Jogador</span> 👋
-          </h1>
-          <p className="text-sm text-white/60">Pronto para entrar em campo?</p>
-        </div>
-      </header>
+    <div className="space-y-6">
+      {/* Welcome Banner */}
+      <div>
+        <h1 className="text-2xl font-bold text-white">
+          Olá, <span className="text-(--varzea-green)">Jogador</span> 👋
+        </h1>
+        <p className="text-sm text-white/60">Pronto para entrar em campo?</p>
+      </div>
 
-      {/* Main Content */}
-      <main className="mx-auto max-w-md space-y-6 px-4 py-6">
-        {/* Earnings Card - Shows money earned */}
-        <section className="animate-fade-in">
-          <EarningsCard
-            totalEarnings={mockEarnings.totalEarnings}
-            pendingPayments={mockEarnings.pendingPayments}
-            gamesThisSeason={mockEarnings.gamesThisSeason}
-          />
-        </section>
-
-        {/* Next Game Card */}
-        <section className="animate-fade-in animation-delay-100">
-          <NextGameCard game={mockNextGame} onFindMatch={handleFindMatch} />
-        </section>
-
-        {/* Teams Match Section */}
-        <section className="animate-fade-in animation-delay-200">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">
-              🔥 Oportunidades de Jogo
-            </h2>
-            <span className="text-xs text-white/50">
-              {hasMoreTeams
-                ? `${mockTeams.length - currentTeamIndex} restantes`
-                : ""}
-            </span>
-          </div>
-
-          {hasMoreTeams && currentTeam ? (
-            <TeamSwipeCard
-              team={currentTeam}
-              onLike={handleLike}
-              onSkip={handleSkip}
-            />
-          ) : (
-            <div className="rounded-xl border border-dashed border-white/20 bg-white/5 p-8 text-center">
-              <p className="text-4xl mb-3">🎉</p>
-              <p className="text-white/70">Você viu todas as oportunidades!</p>
-              <p className="text-sm text-white/50 mt-1">
-                Volte mais tarde para novos times.
-              </p>
-            </div>
-          )}
-        </section>
-
-        {/* Season Stats */}
-        <section className="animate-fade-in animation-delay-400">
+      {/* Single Responsive Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        {/* Left Column - Desktop Only */}
+        <div className="hidden md:block md:col-span-3">
           <SeasonStatsCard stats={mockStats} />
-        </section>
-      </main>
+        </div>
 
-      {/* Bottom Navigation */}
-      <BottomNavbar activeItem="home" />
+        {/* Center Column */}
+        <div className="col-span-1 md:col-span-6 space-y-6">
+          <section>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-white">
+                🔥 Oportunidades de Jogo
+              </h2>
+              <span className="text-xs text-white/50">
+                {hasMoreTeams
+                  ? `${mockTeams.length - currentTeamIndex} restantes`
+                  : ""}
+              </span>
+            </div>
+
+            {hasMoreTeams && currentTeam ? (
+              <TeamSwipeCard
+                team={currentTeam}
+                onLike={handleLike}
+                onSkip={handleSkip}
+              />
+            ) : (
+              <div className="rounded-xl border border-dashed border-white/20 bg-white/5 p-8 text-center">
+                <p className="text-4xl mb-3">🎉</p>
+                <p className="text-white/70">
+                  Você viu todas as oportunidades!
+                </p>
+                <p className="text-sm text-white/50 mt-1">
+                  Volte mais tarde para novos times.
+                </p>
+              </div>
+            )}
+          </section>
+        </div>
+
+        {/* Right Column */}
+        <div className="col-span-1 md:col-span-3 space-y-6">
+          <section>
+            <h3 className="text-lg font-bold text-white mb-3 hidden md:block">
+              Financeiro
+            </h3>
+            <EarningsCard
+              totalEarnings={mockEarnings.totalEarnings}
+              pendingPayments={mockEarnings.pendingPayments}
+              gamesThisSeason={mockEarnings.gamesThisSeason}
+            />
+          </section>
+
+          <section>
+            <h3 className="text-lg font-bold text-white mb-3 hidden md:block">
+              Próximo Jogo
+            </h3>
+            <NextGameCard game={mockNextGame} onFindMatch={handleFindMatch} />
+          </section>
+        </div>
+      </div>
     </div>
   );
 }

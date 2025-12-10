@@ -9,12 +9,10 @@ import {
   type PayablePlayer,
   PendingRequestsCard,
   type PlayerRequest,
-  TeamBottomNavbar,
 } from "@/src/components/team-dashboard";
 
 // ============================================
-// MOCK DATA - Cenário de URGÊNCIA
-// Jogo amanhã, faltam 2 jogadores, jogadores a PAGAR
+// MOCK DATA
 // ============================================
 
 const mockNextMatch: MatchStatusData = {
@@ -28,10 +26,9 @@ const mockNextMatch: MatchStatusData = {
   },
   confirmedPlayers: 9,
   requiredPlayers: 11,
-  hoursUntilMatch: 20, // Less than 24h - triggers URGENT state
+  hoursUntilMatch: 20,
 };
 
-// 💰 Jogadores que o TIME precisa PAGAR (correto para várzea)
 const mockPayablePlayers: PayablePlayer[] = [
   {
     id: "1",
@@ -102,11 +99,8 @@ export default function TeamDashboard() {
   const [isPanicSent, setIsPanicSent] = useState(false);
 
   const handlePanic = async () => {
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log(
-      "🚨 Panic alert sent! Team is now visible to available players"
-    );
+    console.log("🚨 Panic alert sent!");
     setIsPanicSent(true);
   };
 
@@ -126,51 +120,76 @@ export default function TeamDashboard() {
     mockNextMatch.requiredPlayers - mockNextMatch.confirmedPlayers;
 
   return (
-    <div className="min-h-screen bg-onboarding pb-24">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0f0f1a]/90 backdrop-blur-lg px-4 py-4">
-        <div className="mx-auto max-w-md">
-          <h1 className="text-2xl font-bold text-white">
-            ⚽ <span className="text-(--varzea-green)">União São Jorge</span>
-          </h1>
-          <p className="text-sm text-white/60">Painel do Capitão</p>
+    <div className="space-y-6">
+      {/* Welcome Banner */}
+      <div>
+        <h1 className="text-2xl font-bold text-white">
+          ⚽ <span className="text-(--varzea-green)">União São Jorge</span>
+        </h1>
+        <p className="text-sm text-white/60">Painel do Capitão</p>
+      </div>
+
+      {/* Single Responsive Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        {/* Left Column - Desktop Only */}
+        <div className="hidden md:block md:col-span-3">
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <h3 className="text-lg font-bold text-white mb-2">Resumo</h3>
+            <div className="space-y-2 text-sm text-white/60">
+              <div className="flex justify-between">
+                <span>Jogos no Mês</span>
+                <span className="text-white">4</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Gasto Total</span>
+                <span className="text-white">R$ 400</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Vitórias</span>
+                <span className="text-(--varzea-green)">3</span>
+              </div>
+            </div>
+          </div>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="mx-auto max-w-md space-y-6 px-4 py-6">
-        {/* Match Status Hero */}
-        <section className="animate-fade-in">
-          <MatchStatusHero match={mockNextMatch} />
-        </section>
-
-        {/* Panic Button - only show if players are needed */}
-        {playersNeeded > 0 && (
-          <section className="animate-fade-in animation-delay-100">
-            <PanicButton onPanic={handlePanic} />
+        {/* Center Column */}
+        <div className="col-span-1 md:col-span-6 space-y-6">
+          <section>
+            <h2 className="text-xl font-bold text-white mb-4 md:hidden">
+              Próximo Jogo
+            </h2>
+            <MatchStatusHero match={mockNextMatch} />
           </section>
-        )}
 
-        {/* Pending Requests */}
-        <section className="animate-fade-in animation-delay-200">
-          <PendingRequestsCard
-            requests={mockRequests}
-            onAccept={handleAcceptRequest}
-            onReject={handleRejectRequest}
-          />
-        </section>
+          {playersNeeded > 0 && (
+            <section>
+              <PanicButton onPanic={handlePanic} />
+            </section>
+          )}
 
-        {/* Payable Players - Team pays players! */}
-        <section className="animate-fade-in animation-delay-300">
-          <PayablePlayersList
-            players={mockPayablePlayers}
-            onMarkPaid={handleMarkPaid}
-          />
-        </section>
-      </main>
+          <section>
+            <h3 className="text-lg font-bold text-white mb-3">
+              Solicitações Pendentes
+            </h3>
+            <PendingRequestsCard
+              requests={mockRequests}
+              onAccept={handleAcceptRequest}
+              onReject={handleRejectRequest}
+            />
+          </section>
+        </div>
 
-      {/* Bottom Navigation */}
-      <TeamBottomNavbar activeItem="home" />
+        {/* Right Column */}
+        <div className="col-span-1 md:col-span-3">
+          <section>
+            <h3 className="text-lg font-bold text-white mb-3">Financeiro</h3>
+            <PayablePlayersList
+              players={mockPayablePlayers}
+              onMarkPaid={handleMarkPaid}
+            />
+          </section>
+        </div>
+      </div>
     </div>
   );
 }

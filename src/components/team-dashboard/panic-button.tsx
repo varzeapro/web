@@ -35,7 +35,7 @@ export function PanicButton({ disabled, onPanic }: PanicButtonProps) {
       onClick={handleClick}
       disabled={disabled || isLoading}
       className={cn(
-        "relative w-full py-6 text-lg font-bold transition-all duration-300",
+        "relative w-full py-6 text-lg font-bold transition-all duration-300 overflow-hidden",
         isActivated
           ? "bg-green-600 hover:bg-green-600 cursor-default"
           : "bg-linear-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400 shadow-lg shadow-red-500/30 hover:shadow-red-500/50 hover:scale-[1.02]",

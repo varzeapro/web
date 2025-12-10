@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  ArrowLeft,
   DollarSign,
   TrendingUp,
   TrendingDown,
@@ -17,8 +16,6 @@ import {
   CardTitle,
 } from "@/src/components/ui/card";
 import { Badge } from "@/src/components/ui/badge";
-import { TeamBottomNavbar } from "@/src/components/team-dashboard";
-import Link from "next/link";
 import { cn } from "@/src/lib/utils";
 
 // ============================================
@@ -126,137 +123,114 @@ export default function FinancesPage() {
   const balance = totalIncome - totalExpenses;
 
   return (
-    <div className="min-h-screen bg-onboarding pb-24">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0f0f1a]/90 backdrop-blur-lg px-4 py-4">
-        <div className="mx-auto max-w-md flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/time">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white/70 hover:text-white"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-xl font-bold text-white">Finanças</h1>
-              <p className="text-xs text-white/50">Temporada 2024</p>
-            </div>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="border-white/20 text-white/70"
-          >
-            <Filter className="h-4 w-4 mr-1" />
-            Filtrar
-          </Button>
+    <>
+      {/* Page Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-white">💰 Finanças</h1>
+          <p className="text-xs text-white/50">Temporada 2024</p>
         </div>
-      </header>
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-white/20 text-white/70"
+        >
+          <Filter className="h-4 w-4 mr-1" />
+          Filtrar
+        </Button>
+      </div>
 
-      {/* Main Content */}
-      <main className="mx-auto max-w-md px-4 py-6 space-y-6">
-        {/* Summary Cards */}
-        <div className="grid grid-cols-3 gap-3">
-          <Card className="border-0 bg-green-500/10 text-white">
-            <CardContent className="p-4 text-center">
-              <TrendingUp className="h-5 w-5 mx-auto mb-1 text-green-400" />
-              <p className="text-xs text-white/50">Entradas</p>
-              <p className="text-lg font-bold text-green-400">
-                R$ {totalIncome}
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="border-0 bg-red-500/10 text-white">
-            <CardContent className="p-4 text-center">
-              <TrendingDown className="h-5 w-5 mx-auto mb-1 text-red-400" />
-              <p className="text-xs text-white/50">Saídas</p>
-              <p className="text-lg font-bold text-red-400">
-                R$ {totalExpenses}
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="border-0 bg-(--varzea-blue)/20 text-white">
-            <CardContent className="p-4 text-center">
-              <DollarSign className="h-5 w-5 mx-auto mb-1 text-(--varzea-blue-light)" />
-              <p className="text-xs text-white/50">Saldo</p>
-              <p
-                className={cn(
-                  "text-lg font-bold",
-                  balance >= 0 ? "text-(--varzea-green)" : "text-red-400"
-                )}
-              >
-                R$ {balance}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Transactions */}
-        <Card className="border-0 bg-linear-to-br from-[#1a1a2e] to-[#0f0f1a] text-white">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-(--varzea-gold)" />
-              Histórico
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {transactions.map((transaction, index) => (
-              <div
-                key={transaction.id}
-                className="flex items-center gap-3 rounded-lg bg-white/5 px-3 py-3 animate-fade-in"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <div
-                  className={cn(
-                    "flex h-10 w-10 items-center justify-center rounded-full",
-                    transaction.type === "income"
-                      ? "bg-green-500/20"
-                      : "bg-red-500/20"
-                  )}
-                >
-                  {transaction.type === "income" ? (
-                    <TrendingUp className="h-5 w-5 text-green-400" />
-                  ) : (
-                    <TrendingDown className="h-5 w-5 text-red-400" />
-                  )}
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">
-                    {transaction.description}
-                  </p>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <Badge className="text-[10px] bg-white/10 text-white/50 border-0">
-                      {categoryLabels[transaction.category]}
-                    </Badge>
-                    <span className="text-xs text-white/40">
-                      {transaction.date}
-                    </span>
-                  </div>
-                </div>
-
-                <span
-                  className={cn(
-                    "font-semibold",
-                    transaction.type === "income"
-                      ? "text-green-400"
-                      : "text-red-400"
-                  )}
-                >
-                  {transaction.type === "income" ? "+" : ""}R${" "}
-                  {Math.abs(transaction.amount)}
-                </span>
-              </div>
-            ))}
+      {/* Summary Cards */}
+      <div className="grid grid-cols-3 gap-3 mb-6">
+        <Card className="border-0 bg-green-500/10 text-white">
+          <CardContent className="p-4 text-center">
+            <TrendingUp className="h-5 w-5 mx-auto mb-1 text-green-400" />
+            <p className="text-xs text-white/50">Entradas</p>
+            <p className="text-lg font-bold text-green-400">R$ {totalIncome}</p>
           </CardContent>
         </Card>
-      </main>
+        <Card className="border-0 bg-red-500/10 text-white">
+          <CardContent className="p-4 text-center">
+            <TrendingDown className="h-5 w-5 mx-auto mb-1 text-red-400" />
+            <p className="text-xs text-white/50">Saídas</p>
+            <p className="text-lg font-bold text-red-400">R$ {totalExpenses}</p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 bg-(--varzea-blue)/20 text-white">
+          <CardContent className="p-4 text-center">
+            <DollarSign className="h-5 w-5 mx-auto mb-1 text-(--varzea-blue-light)" />
+            <p className="text-xs text-white/50">Saldo</p>
+            <p
+              className={cn(
+                "text-lg font-bold",
+                balance >= 0 ? "text-(--varzea-green)" : "text-red-400"
+              )}
+            >
+              R$ {balance}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* Bottom Navigation */}
-      <TeamBottomNavbar activeItem="finances" />
-    </div>
+      {/* Transactions */}
+      <Card className="border-0 bg-linear-to-br from-[#1a1a2e] to-[#0f0f1a] text-white">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-(--varzea-gold)" />
+            Histórico
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {transactions.map((transaction, index) => (
+            <div
+              key={transaction.id}
+              className="flex items-center gap-3 rounded-lg bg-white/5 px-3 py-3 animate-fade-in"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <div
+                className={cn(
+                  "flex h-10 w-10 items-center justify-center rounded-full",
+                  transaction.type === "income"
+                    ? "bg-green-500/20"
+                    : "bg-red-500/20"
+                )}
+              >
+                {transaction.type === "income" ? (
+                  <TrendingUp className="h-5 w-5 text-green-400" />
+                ) : (
+                  <TrendingDown className="h-5 w-5 text-red-400" />
+                )}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">
+                  {transaction.description}
+                </p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <Badge className="text-[10px] bg-white/10 text-white/50 border-0">
+                    {categoryLabels[transaction.category]}
+                  </Badge>
+                  <span className="text-xs text-white/40">
+                    {transaction.date}
+                  </span>
+                </div>
+              </div>
+
+              <span
+                className={cn(
+                  "font-semibold",
+                  transaction.type === "income"
+                    ? "text-green-400"
+                    : "text-red-400"
+                )}
+              >
+                {transaction.type === "income" ? "+" : ""}R${" "}
+                {Math.abs(transaction.amount)}
+              </span>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    </>
   );
 }

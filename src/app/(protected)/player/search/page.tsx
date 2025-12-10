@@ -11,7 +11,6 @@ import {
   TeamGridCard,
   type TeamGridData,
 } from "@/src/components/player-dashboard/team-grid-card";
-import { BottomNavbar } from "@/src/components/player-dashboard/bottom-navbar";
 
 // ============================================
 // MOCK DATA
@@ -95,33 +94,28 @@ export default function SearchPage() {
 
   // Filter teams based on search and filters
   const filteredTeams = mockTeams.filter((team) => {
-    // Search query
     if (
       searchQuery &&
       !team.name.toLowerCase().includes(searchQuery.toLowerCase())
     ) {
       return false;
     }
-    // Position filter
     if (
       filters.positions.length > 0 &&
       !filters.positions.includes(team.lookingFor)
     ) {
       return false;
     }
-    // Level filter
     if (
       filters.levels.length > 0 &&
       !filters.levels.map((l: string) => l.toLowerCase()).includes(team.level)
     ) {
       return false;
     }
-    // Distance filter
     const distance = parseFloat(team.distance);
     if (distance > filters.maxDistance) {
       return false;
     }
-    // Days filter
     if (
       filters.days.length > 0 &&
       !team.playDays.some((d) => filters.days.includes(d))
@@ -136,63 +130,50 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-onboarding pb-24">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0f0f1a]/90 backdrop-blur-lg px-4 py-4">
-        <div className="mx-auto max-w-md">
-          <h1 className="text-2xl font-bold text-white mb-4">
-            🔍 Buscar Times
-          </h1>
+    <>
+      {/* Page Title & Search */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-white mb-4">🔍 Buscar Times</h1>
 
-          {/* Search Bar */}
-          <div className="flex gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
-              <Input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar por nome..."
-                className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-white/40"
-              />
-            </div>
-            <SearchFilters filters={filters} onFiltersChange={setFilters} />
+        <div className="flex gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar por nome..."
+              className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-white/40"
+            />
           </div>
+          <SearchFilters filters={filters} onFiltersChange={setFilters} />
         </div>
-      </header>
+      </div>
 
-      {/* Main Content */}
-      <main className="mx-auto max-w-md px-4 py-6">
-        {/* Results count */}
-        <p className="text-sm text-white/50 mb-4">
-          {filteredTeams.length} times encontrados
-        </p>
+      {/* Results count */}
+      <p className="text-sm text-white/50 mb-4">
+        {filteredTeams.length} times encontrados
+      </p>
 
-        {/* Team Grid */}
-        {filteredTeams.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3">
-            {filteredTeams.map((team, index) => (
-              <div
-                key={team.id}
-                className="animate-fade-in"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <TeamGridCard team={team} onInterest={handleInterest} />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-xl border border-dashed border-white/20 bg-white/5 p-8 text-center mt-8">
-            <p className="text-4xl mb-3">🔍</p>
-            <p className="text-white/70">Nenhum time encontrado</p>
-            <p className="text-sm text-white/50 mt-1">
-              Tente ajustar os filtros
-            </p>
-          </div>
-        )}
-      </main>
-
-      {/* Bottom Navigation */}
-      <BottomNavbar activeItem="search" />
-    </div>
+      {/* Team Grid */}
+      {filteredTeams.length > 0 ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {filteredTeams.map((team, index) => (
+            <div
+              key={team.id}
+              className="animate-fade-in"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <TeamGridCard team={team} onInterest={handleInterest} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-xl border border-dashed border-white/20 bg-white/5 p-8 text-center mt-8">
+          <p className="text-4xl mb-3">🔍</p>
+          <p className="text-white/70">Nenhum time encontrado</p>
+          <p className="text-sm text-white/50 mt-1">Tente ajustar os filtros</p>
+        </div>
+      )}
+    </>
   );
 }

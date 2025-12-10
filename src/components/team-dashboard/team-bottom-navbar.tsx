@@ -1,14 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Home, Users, Calendar, DollarSign, Settings } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 
 type TeamNavItem = "home" | "matches" | "roster" | "finances" | "settings";
-
-interface TeamBottomNavbarProps {
-  activeItem?: TeamNavItem;
-}
 
 const navItems: {
   id: TeamNavItem;
@@ -33,9 +30,21 @@ const navItems: {
   },
 ];
 
-export function TeamBottomNavbar({
-  activeItem = "home",
-}: TeamBottomNavbarProps) {
+export function TeamBottomNavbar() {
+  const pathname = usePathname();
+
+  // Determina qual item está ativo baseado na rota atual
+  const getActiveItem = (): TeamNavItem => {
+    if (pathname === "/time") return "home";
+    if (pathname.startsWith("/time/partidas")) return "matches";
+    if (pathname.startsWith("/time/elenco")) return "roster";
+    if (pathname.startsWith("/time/financas")) return "finances";
+    if (pathname.startsWith("/time/configuracoes")) return "settings";
+    return "home";
+  };
+
+  const activeItem = getActiveItem();
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#0f0f1a]/95 backdrop-blur-lg">
       <div className="mx-auto flex max-w-md items-center justify-around px-2 py-2">
