@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Home, Search, Calendar, User } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 
@@ -7,31 +8,32 @@ type NavItem = "home" | "search" | "matches" | "profile";
 
 interface BottomNavbarProps {
   activeItem?: NavItem;
-  onNavigate?: (item: NavItem) => void;
 }
 
-const navItems: { id: NavItem; icon: typeof Home; label: string }[] = [
-  { id: "home", icon: Home, label: "Início" },
-  { id: "search", icon: Search, label: "Buscar" },
-  { id: "matches", icon: Calendar, label: "Partidas" },
-  { id: "profile", icon: User, label: "Perfil" },
+const navItems: {
+  id: NavItem;
+  icon: typeof Home;
+  label: string;
+  href: string;
+}[] = [
+  { id: "home", icon: Home, label: "Início", href: "/player" },
+  { id: "search", icon: Search, label: "Buscar", href: "/player/search" },
+  { id: "matches", icon: Calendar, label: "Partidas", href: "/player/matches" },
+  { id: "profile", icon: User, label: "Perfil", href: "/player/profile" },
 ];
 
-export function BottomNavbar({
-  activeItem = "home",
-  onNavigate,
-}: BottomNavbarProps) {
+export function BottomNavbar({ activeItem = "home" }: BottomNavbarProps) {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#0f0f1a]/95 backdrop-blur-lg">
       <div className="mx-auto flex max-w-md items-center justify-around px-2 py-2">
         {navItems.map((item) => {
           const isActive = activeItem === item.id;
           return (
-            <button
+            <Link
               key={item.id}
-              onClick={() => onNavigate?.(item.id)}
+              href={item.href}
               className={cn(
-                "flex flex-1 flex-col items-center gap-1 rounded-xl py-2 transition-all duration-200",
+                "relative flex flex-1 flex-col items-center gap-1 rounded-xl py-2 transition-all duration-200",
                 isActive
                   ? "text-(--varzea-green)"
                   : "text-white/50 hover:text-white/80"
@@ -63,7 +65,7 @@ export function BottomNavbar({
               {isActive && (
                 <div className="absolute -bottom-1 h-1 w-1 rounded-full bg-(--varzea-green)" />
               )}
-            </button>
+            </Link>
           );
         })}
       </div>

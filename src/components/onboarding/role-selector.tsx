@@ -40,7 +40,7 @@ function RoleCard({
       disabled={isLoading}
       className={cn(
         // Base styles
-        "group relative w-full overflow-hidden rounded-3xl p-1 transition-all duration-500 ease-out",
+        "group cursor-pointer relative w-full overflow-hidden rounded-3xl p-1 transition-all duration-500 ease-out",
         // Transform on hover
         isHovered && !isLoading && "scale-[1.02] -translate-y-2",
         // Glow effect
