@@ -7,6 +7,8 @@ import { ProfileHeader } from "@/src/components/player-dashboard/profile-header"
 import { ProfileInfo } from "@/src/components/player-dashboard/profile-info";
 import { BottomNavbar } from "@/src/components/player-dashboard/bottom-navbar";
 import Link from "next/link";
+import { authClient } from "@/src/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 // ============================================
 // MOCK DATA
@@ -38,6 +40,7 @@ const mockInfo = {
 // ============================================
 
 export default function ProfilePage() {
+  const router = useRouter();
   const [, setEditingAvatar] = useState(false);
 
   const menuItems = [
@@ -96,8 +99,16 @@ export default function ProfilePage() {
 
           {/* Logout */}
           <button
-            className="flex w-full items-center gap-3 rounded-xl bg-red-500/10 px-4 py-4 text-red-400 transition-colors hover:bg-red-500/20"
-            onClick={() => console.log("Logout")}
+            className="flex cursor-pointer w-full items-center gap-3 rounded-xl bg-red-500/10 px-4 py-4 text-red-400 transition-colors hover:bg-red-500/20"
+            onClick={() =>
+              authClient.signOut({
+                fetchOptions: {
+                  onSuccess: () => {
+                    router.push("/sign-in"); // redirect to login page
+                  },
+                },
+              })
+            }
           >
             <LogOut className="h-5 w-5" />
             <span className="flex-1 text-left">Sair da conta</span>

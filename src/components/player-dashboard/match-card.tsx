@@ -62,7 +62,7 @@ export function MatchCard({ match, onClick }: MatchCardProps) {
   const getResultIcon = () => {
     if (!match.result) return null;
     if (match.result.myScore > match.result.opponentScore) {
-      return <Trophy className="h-4 w-4 text-[var(--varzea-gold)]" />;
+      return <Trophy className="h-4 w-4 text-(--varzea-gold)" />;
     } else if (match.result.myScore < match.result.opponentScore) {
       return <X className="h-4 w-4 text-red-400" />;
     }
@@ -74,8 +74,8 @@ export function MatchCard({ match, onClick }: MatchCardProps) {
       className={cn(
         "border-0 text-white overflow-hidden cursor-pointer transition-all hover:scale-[1.02]",
         isCancelled
-          ? "bg-gradient-to-br from-[#1a1a1a] to-[#141414] opacity-60"
-          : "bg-gradient-to-br from-[#1a1a2e] to-[#16162a]"
+          ? "bg-linear-to-br from-[#1a1a1a] to-[#141414] opacity-60"
+          : "bg-linear-to-br from-[#1a1a2e] to-[#16162a]"
       )}
       onClick={() => onClick?.(match.id)}
     >
@@ -87,7 +87,7 @@ export function MatchCard({ match, onClick }: MatchCardProps) {
               src={match.opponentTeam.avatar}
               alt={match.opponentTeam.name}
             />
-            <AvatarFallback className="bg-[var(--varzea-green-dark)] text-lg font-bold text-white">
+            <AvatarFallback className="bg-(--varzea-green-dark) text-lg font-bold text-white">
               {match.opponentTeam.initials}
             </AvatarFallback>
           </Avatar>
@@ -132,7 +132,7 @@ export function MatchCard({ match, onClick }: MatchCardProps) {
             <div className="flex flex-col items-center justify-center gap-1 pl-2 border-l border-white/10">
               {getResultIcon()}
               <div className="text-center">
-                <span className="text-lg font-bold text-[var(--varzea-green)]">
+                <span className="text-lg font-bold text-(--varzea-green)">
                   {match.result.myScore}
                 </span>
                 <span className="text-white/30 mx-1">x</span>

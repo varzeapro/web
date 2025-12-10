@@ -28,7 +28,7 @@ export async function requireAuth(
         if (currentRole === "PLAYER") {
           redirect("/player");
         } else if (currentRole === "TEAM") {
-          redirect("/team");
+          redirect("/time");
         }
       }
     } else {
@@ -38,7 +38,7 @@ export async function requireAuth(
       if (currentRole === "PLAYER") {
         redirect("/player");
       } else if (currentRole === "TEAM") {
-        redirect("/team");
+        redirect("/time");
       }
       // If no role but onboarded (edge case), allow access
     }

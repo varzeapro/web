@@ -8,3 +8,4 @@ export { SearchFilters } from "./search-filters";
 export type { SearchFiltersData } from "./search-filters";
 export { TeamGridCard, type TeamGridData } from "./team-grid-card";
 export { MatchCard, type MatchData, type MatchStatus } from "./match-card";
+export { EarningsCard } from "./earnings-card";

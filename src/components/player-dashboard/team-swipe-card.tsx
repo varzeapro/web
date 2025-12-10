@@ -23,6 +23,7 @@ interface TeamData {
   distance: string;
   playDays: string[];
   playTime: string;
+  paymentPerGame?: number; // 💰 Payment offered to players
 }
 
 interface TeamSwipeCardProps {
@@ -70,6 +71,15 @@ export function TeamSwipeCard({ team, onLike, onSkip }: TeamSwipeCardProps) {
       )}
     >
       <CardContent className="p-0">
+        {/* Payment Badge - Prominent! */}
+        {team.paymentPerGame && team.paymentPerGame > 0 && (
+          <div className="absolute top-4 right-4 z-10">
+            <Badge className="bg-(--varzea-gold) text-black font-bold text-sm px-3 py-1 shadow-lg">
+              💰 R$ {team.paymentPerGame}/jogo
+            </Badge>
+          </div>
+        )}
+
         {/* Team Header */}
         <div className="relative px-6 pt-6 pb-4">
           <div className="absolute inset-0 bg-linear-to-r from-(--varzea-blue)/20 to-(--varzea-green)/20" />
